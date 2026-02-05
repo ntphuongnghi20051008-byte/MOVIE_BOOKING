@@ -32,6 +32,11 @@ body{
     background:black;
     color:white;
 }
+    <script>
+if(!localStorage.getItem("currentUser")){
+    window.location.href="login.html";
+}
+</script>
 
 header{
     background:#0cb077;
@@ -364,5 +369,6 @@ function closeSuccess(){
 </script>
 </body>
 </html>
+
 
 

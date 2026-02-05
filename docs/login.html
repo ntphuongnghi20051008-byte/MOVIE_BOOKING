@@ -13,75 +13,98 @@ body{
     display:flex;
     justify-content:center;
     align-items:center;
-
     background:linear-gradient(135deg,#141e30,#243b55);
 }
 
-/* khung login */
 .login-box{
     background:#111;
     padding:40px;
     width:320px;
     border-radius:12px;
     text-align:center;
-    box-shadow:0 0 20px rgba(0,0,0,0.8);
-
-    animation: blinkBox 2s infinite;
+    animation:blinkBox 2s infinite;
 }
 
 @keyframes blinkBox{
-    0%{box-shadow:0 0 15px #09e5cf;}
-    50%{box-shadow:0 0 35px #e50914;}
-    100%{box-shadow:0 0 15px #09e5cf;}
+0%{box-shadow:0 0 15px #09e5cf;}
+50%{box-shadow:0 0 35px #e50914;}
+100%{box-shadow:0 0 15px #09e5cf;}
 }
 
-h2{
-    color:#09e5cf;
-    margin-bottom:20px;
-}
+h2{color:#09e5cf;}
 
 input{
-    width:100%;
-    padding:12px;
-    margin:10px 0;
-    border:none;
-    border-radius:6px;
-    background:#222;
-    color:white;
+width:100%;
+padding:12px;
+margin:10px 0;
+border:none;
+border-radius:6px;
+background:#222;
+color:white;
 }
 
 button{
-    width:100%;
-    padding:12px;
-    border:none;
-    border-radius:6px;
-    background:#e50914;
-    color:white;
-    font-size:16px;
-    cursor:pointer;
+width:100%;
+padding:12px;
+border:none;
+border-radius:6px;
+background:#e50914;
+color:white;
+cursor:pointer;
+margin-top:5px;
 }
 
 button:hover{
-    background:#ff2a33;
+background:#ff2a33;
 }
+
+.msg{color:#ff4d4d;margin-top:10px;}
 </style>
 </head>
 
 <body>
 
 <div class="login-box">
-    <h2>🎬 ĐĂNG NHẬP</h2>
+<h2>🎬 MOVIE LOGIN</h2>
 
-    <input type="text" placeholder="Tên đăng nhập">
-    <input type="password" placeholder="Mật khẩu">
+<input type="text" id="user" placeholder="Tên đăng nhập">
+<input type="password" id="pass" placeholder="Mật khẩu">
 
-    <button onclick="chuyenTrang()">Đăng nhập</button>
+<button onclick="login()">Đăng nhập</button>
+<button onclick="register()">Đăng ký</button>
+
+<div class="msg" id="msg"></div>
 </div>
 
 <script>
-function chuyenTrang(){
-    window.location.href="index.html";
+
+function register(){
+let u=document.getElementById("user").value;
+let p=document.getElementById("pass").value;
+
+if(!u||!p){
+msg.innerText="Nhập đủ thông tin!";
+return;
 }
+
+localStorage.setItem(u,p);
+msg.innerText="Đăng ký thành công!";
+}
+
+function login(){
+let u=document.getElementById("user").value;
+let p=document.getElementById("pass").value;
+
+let saved=localStorage.getItem(u);
+
+if(saved==p){
+localStorage.setItem("login","true");
+window.location.href="index.html";
+}else{
+msg.innerText="Sai tài khoản hoặc mật khẩu!";
+}
+}
+
 </script>
 
 </body>

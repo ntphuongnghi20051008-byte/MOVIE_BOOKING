@@ -422,6 +422,7 @@ if(!localStorage.getItem("currentUser")){
         style="margin-left:20px;padding:6px 12px;border:none;border-radius:6px;cursor:pointer">
     🌙
 </button>
+    
 <div style="font-size:18px;margin-top:5px">
 Xin chào: <span id="user"></span> |
 <span onclick="logout()" style="cursor:pointer;color:yellow">
@@ -1046,6 +1047,10 @@ reviews[selectedMovie].forEach(r=>{
         `;
     });
 }
+    function logout(){
+    localStorage.removeItem("currentUser");
+    window.location.href = "index.html";
+}
 </script>
 <!-- ===== CONTACT CARD ĐẸP ===== -->
 <div class="contact-card">
@@ -1062,4 +1067,5 @@ reviews[selectedMovie].forEach(r=>{
 </div>
 </body>
 </html>
+
 

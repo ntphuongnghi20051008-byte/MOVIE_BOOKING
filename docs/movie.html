@@ -1,6 +1,7 @@
-<!DOCTYPE html>
+ư<!DOCTYPE html>
 <html lang="vi">
 <head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta charset="UTF-8">
 <title>Movie Booking</title>
 <style>
@@ -27,18 +28,45 @@
 }
 
 body{
+    
+
     margin:0;
     font-family: Arial;
     background:black;
     color:white;
+    transition: 0.4s;
 }
-    <script>
-if(!localStorage.getItem("currentUser")){
-    window.location.href="login.html";
+body.light{
+    background:#f5f5f5;
+    color:black;
 }
-</script>
+
+body.light .movie{
+    background:white;
+    box-shadow:0 0 10px rgba(0,0,0,0.2);
+}
+
+body.light header{
+    background:#09e5cf;
+    color:black;
+}
+
+body.light .modal-content{
+    background:white;
+    color:black;
+}
+
+body.light .seat{
+    background:#ddd;
+}
+
+body.light .time{
+    background:#e0e0e0;
+    color:black;
+}
 
 header{
+    
     background:#0cb077;
     padding:15px;
     text-align:center;
@@ -61,6 +89,11 @@ header{
     transition:0.3s;
      width: 100%;
     max-width: 100%;
+}
+.slider{
+    width:100%;
+    height:200px;
+    overflow:hidden;
 }
 .slides{
     display:flex;
@@ -161,10 +194,156 @@ header{
     cursor:pointer;
     color:#e50914;
 }
+.screen {
+    width: 85%;
+    height: 65px;
+    margin: 20px auto;
+
+    background: linear-gradient(to bottom, #ffffff, #cfcfcf);
+    border-radius: 50% 50% 0 0;
+
+    text-align: center;
+    line-height: 65px;
+    font-weight: bold;
+    letter-spacing: 2px;
+
+    box-shadow: 
+        0 0 10px rgba(255,255,255,0.6),
+        0 0 20px rgba(0,150,255,0.4);
+
+    animation: screenBlink 2s infinite ease-in-out;
+}
+@keyframes screenBlink {
+    0% {
+        box-shadow: 0 0 10px rgba(255,255,255,0.6),
+                    0 0 20px rgba(0,150,255,0.4);
+        opacity: 0.95;
+    }
+    50% {
+        box-shadow: 0 0 20px rgba(255,255,255,0.9),
+                    0 0 35px rgba(0,150,255,0.7);
+        opacity: 1;
+    }
+    100% {
+        box-shadow: 0 0 10px rgba(255,255,255,0.6),
+                    0 0 20px rgba(0,150,255,0.4);
+        opacity: 0.95;
+    }
+}
+.rating{
+    color: gold;
+    font-weight: bold;
+    margin: 6px 0;
+}
+/* ===== RESPONSIVE CHO MOBILE ===== */
+@media (max-width: 768px) {
+
+  .movie-list {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  }
+
+  .movie img {
+    height: 220px;
+  }
+
+  .screen {
+      width: 96%;
+      margin-bottom: 10px;
+  }
+}
+.review-box{
+    margin-top:10px;
+    display:flex;
+    flex-direction:column;
+    gap:5px;
+}
+
+.review-box textarea{
+    resize:none;
+    height:60px;
+}
+
+.review-item{
+    background:#f1f1f1;
+    padding:8px;
+    margin:5px 0;
+    border-radius:5px;
+}
+
+body.light .review-item{
+    background:#ddd;
+}
+/* ===== CONTACT CARD STYLE ===== */
+.contact-card{
+    position:fixed;
+    bottom:20px;
+    right:20px;
+    width:230px;
+    padding:15px;
+    border-radius:15px;
+
+    backdrop-filter: blur(12px);
+    background: rgba(255,255,255,0.1);
+    border:1px solid rgba(255,255,255,0.2);
+
+    box-shadow:0 8px 25px rgba(0,0,0,0.4);
+
+    font-size:14px;
+    transition:0.3s;
+    z-index:999;
+}
+
+.contact-card:hover{
+    transform: translateY(-5px);
+    box-shadow:0 12px 35px rgba(0,0,0,0.6);
+}
+
+.contact-title{
+    font-size:13px;
+    letter-spacing:1px;
+    color:#09e5cf;
+    margin-bottom:5px;
+}
+
+.contact-name{
+    font-size:18px;
+    font-weight:bold;
+    margin-bottom:10px;
+}
+
+.contact-item{
+    margin:5px 0;
+}
+
+.contact-item a{
+    color:white;
+    text-decoration:none;
+}
+
+.contact-item a:hover{
+    color:#09e5cf;
+}
+
+/* Light mode */
+body.light .contact-card{
+    background: rgba(255,255,255,0.8);
+    border:1px solid rgba(0,0,0,0.1);
+    color:black;
+}
+
+body.light .contact-item a{
+    color:black;
+}
 </style>
 </head>
 
 <body>
+    <script>
+if(!localStorage.getItem("currentUser")){
+    window.location.href = "login.html";
+}
+</script>
+
     <div class="slider">
     <div class="slides">
         <img src="https://pbs.twimg.com/media/GFMv8VKa8AAVgHV.jpg">
@@ -191,13 +370,34 @@ header{
 </div>
 
 
-<header style ="font-size:50px;">🎬 MOVIE BOOKING</header>
+<header style="font-size:50px;">
+🎬 MOVIE BOOKING
+<button onclick="toggleTheme()" 
+        style="margin-left:20px;padding:6px 12px;border:none;border-radius:6px;cursor:pointer">
+    🌙
+</button>
+<div style="font-size:18px;margin-top:5px">
+Xin chào: <span id="user"></span> |
+<span onclick="logout()" style="cursor:pointer;color:yellow">
+Đăng xuất
+</span>
+</div>
+</header>
+<!-- 🔎 THANH TÌM KIẾM -->
+<div style="text-align:center; margin:20px;">
+    <input type="text" id="searchInput"
+        placeholder="Tìm phim hoặc thể loại..."
+        style="padding:10px;width:300px;border-radius:6px;border:none;">
+</div>
+
 <div class="movie-list">
+
     <div class=" movie">
         <img src="https://i.ebayimg.com/images/g/OcgAAOSw4wRdXxj2/s-l1200.jpg">
         <div class="movie-info">
             <h3>AVATAR</h3>
             <p style="color:white; text-align: center">Khoa học viễn tưởng - Hành động - Phiêu lưu</p>
+             <p class="rating">⭐ 9.0 / 10</p>
             <button onclick="openBooking('AVATAR')">Đặt vé</button>
         </div>
     </div>
@@ -207,6 +407,7 @@ header{
         <div class="movie-info">
             <h3>ZOTOPIA</h3>
             <p> Hoạt hình - hài hước</p>
+             <p class="rating">⭐ 8.7 / 10</p>
             <button onclick="openBooking('ZOTOPIA')">Đặt vé</button>
         </div>
     </div>
@@ -216,14 +417,16 @@ header{
         <div class="movie-info">
             <h3>THẾ GIỚI KHỦNG LONG</h3>
             <p>Động vật - Hành động</p>
+             <p class="rating">⭐ 8.8 / 10</p>
             <button onclick="openBooking('THẾ GIỚI KHỦNG LONG')">Đặt vé</button>
         </div>
     </div>
     <div class="movie">
         <img src="7.jpg">
         <div class="movie-info">
-            <h3>XỬ SỞ CÁC NGUYÊN TỐ</h3>
+            <h3>Xứ SỞ CÁC NGUYÊN TỐ</h3>
             <p> Tình cảm </p>
+             <p class="rating">⭐ 8.0 / 10</p>
             <button onclick="openBooking('XỨ SỞ CÁC NGUYÊN TỐ')">Đặt vé</button>
         </div>
     </div>
@@ -232,10 +435,138 @@ header{
         <div class="movie-info">
             <h3>GRAVE OF THE FIRELIES</h3>
             <p> Tình cảm gia đình</p>
+             <p class="rating">⭐ 8.9 / 10</p>
             <button onclick="openBooking('GRAVE OF THE FIRELIES')">Đặt vé</button>
         </div>
      </div>
+<div class="movie">
+        <img src="dp.jpg">
+        <div class="movie-info">
+            <h3>ĐÀO PHỞ VÀ PIANO</h3>
+            <p> Tình cảm gia đình</p>
+             <p class="rating">⭐ 8.1 / 10</p>
+            <button onclick="openBooking('ĐÀO PHỞ VÀ PIANO')">Đặt vé</button>
+        </div>
+     </div>
+<div class="movie">
+        <img src="mb.jpg">
+        <div class="movie-info">
+            <h3>MẮT BIẾC</h3>
+            <p> Tình cảm </p>
+             <p class="rating">⭐ 7.5 / 10</p>
+            <button onclick="openBooking('MẮT BIẾC')">Đặt vé</button>
+        </div>
+     </div>
+<div class="movie">
+        <img src="AN.jpg">
+        <div class="movie-info">
+            <h3>ĐẤU TRƯỜNG ÂM NHẠC 2</h3>
+            <p> Hoạt hình - Hài hước </p>
+             <p class="rating">⭐ 7.8 / 10</p>
+            <button onclick="openBooking('ĐẤU TRƯỜNG ÂM NHẠC 2')">Đặt vé</button>
+        </div>
+     </div>
+<div class="movie">
+        <img src="VO.jpg">
+        <div class="movie-info">
+            <h3>NGƯỜI VỢ CUỐI CÙNG </h3>
+            <p> Tình cảm gia đình</p>
+             <p class="rating">⭐ 8.2 / 10</p>
+            <button onclick="openBooking('NGƯỜI VỢ CUỐI CÙNG')">Đặt vé</button>
+        </div>
+     </div>
+<div class="movie">
+        <img src="BOGIA.webp">
+        <div class="movie-info">
+            <h3>BỐ GIÀ</h3>
+            <p> Tình cảm gia đình</p>
+             <p class="rating">⭐ 8.9 / 10</p>
+            <button onclick="openBooking('BỐ GIÀ')">Đặt vé</button>
+        </div>
+     </div>
+<div class="movie">
+        <img src="MAI.png">
+        <div class="movie-info">
+            <h3>MAI</h3>
+            <p> Tình cảm </p>
+             <p class="rating">⭐ 9.2 / 10</p>
+            <button onclick="openBooking('MAI')">Đặt vé</button>
+        </div>
+     </div>
+<div class="movie">
+        <img src="1742_4_nha_ba_nu_Copy.jpg">
+        <div class="movie-info">
+            <h3>NHÀ BÀ NỮ</h3>
+            <p> Tình cảm gia đình </p>
+             <p class="rating">⭐ 7.9 / 10</p>
+            <button onclick="openBooking('NHÀ BÀ NỮ')">Đặt vé</button>
+        </div>
+     </div>
+<div class="movie">
+        <img src="44344492944259704-longdien.png">
+        <div class="movie-info">
+            <h3>TRUY TÌM LONG DIÊN HƯƠNG</h3>
+            <p> Tình cảm gia đình, Hành động </p>
+             <p class="rating">⭐ 9.3 / 10</p>
+            <button onclick="openBooking('TRUY TÌM LONG DIÊN HƯƠNG')">Đặt vé</button>
+        </div>
+     </div>
+<div class="movie">
+        <img src="Quy-Nhap-Trang-teaser-poster-post-pic1_KP.webp">
+        <div class="movie-info">
+            <h3>QUỶ NHẬP TRÀNG</h3>
+            <p> Kinh dị, Tình cảm gia đình </p>
+             <p class="rating">⭐ 9.2 / 10</p>
+            <button onclick="openBooking('QUỶ NHẬP TRÀNG')">Đặt vé</button>
+        </div>
+     </div>
+<div class="movie">
+        <img src="Truong-giang-thong-bao-phim-nha-ba-toi-mot-phong-ra-rap-mung-1-tet-ro-tin-don-hieuthuhai-gop-mat-2.png">
+        <div class="movie-info">
+            <h3>NHÀ BA TÔI CÓ MỘT PHÒNG</h3>
+            <p>Tình cảm gia đình </p>
+             <p class="rating">⭐ 8.3 / 10</p>
+            <button onclick="openBooking('NHÀ BA TÔI CÓ MỘT PHÒNG')">Đặt vé</button>
+        </div>
+     </div>
+<div class="movie">
+        <img src="Tho_oi_poster.jpg">
+        <div class="movie-info">
+            <h3>THỎ ƠI</h3>
+            <p>Hài hước, tình cảm </p>
+             <p class="rating">⭐ 8.9 / 10</p>
+            <button onclick="openBooking('THỎ ƠI')">Đặt vé</button>
+        </div>
+     </div>
+<div class="movie">
+        <img src="6965b9a88578c657966705.jpg">
+        <div class="movie-info">
+            <h3>BÁU VẬT TRỜI CHO</h3>
+            <p>Hài hước, tình cảm </p>
+             <p class="rating">⭐ 9.0 / 10</p>
+            <button onclick="openBooking('BÁU VẬT TRỜI CHO')">Đặt vé</button>
+        </div>
+     </div>
+<div class="movie">
+        <img src="teasermam-song-17252584220031729062127.jpg">
+        <div class="movie-info">
+            <h3>ĐỊA ĐẠO</h3>
+            <p>Lịch sử </p>
+             <p class="rating">⭐ 9.5 / 10</p>
+            <button onclick="openBooking('ĐỊA ĐẠO')">Đặt vé</button>
+        </div>
+     </div> 
+<div class="movie">
+        <img src="Thien-duong-mau-poster.png">
+        <div class="movie-info">
+            <h3>THIÊN ĐƯỜNG MÁU</h3>
+            <p>Hành động, Tình cảm</p>
+             <p class="rating">⭐ 9.3 / 10</p>
+            <button onclick="openBooking('THIÊN ĐƯỜNG MÁU')">Đặt vé</button>
+        </div>
+     </div>
 </div> 
+
 <!-- Modal Booking -->
  <!-- Modal Success -->
 <div class="modal" id="successModal">
@@ -251,9 +582,24 @@ header{
     
     <div class="modal-content">
         <span class="close" onclick="closeBooking()">X</span>
-        <h2 id="movieTitle"></h2>
-    <p>Chọn giờ chiếu:</p>
+     <h2 id="movieTitle"></h2>
+     <h3>Đánh giá</h3>
+
+<div id="reviewList"></div>
+
+<div class="review-box">
+    <input type="text" id="reviewName" placeholder="Tên của bạn">
+    <textarea id="reviewContent" placeholder="Nhập đánh giá..."></textarea>
+    <button onclick="addReview()">Gửi đánh giá</button>
+</div>
+
+<p>Chọn ngày xem:</p>
+<div class="showtimes" id="showDates"></div>
+
+<p>Chọn giờ chiếu:</p>
 <div class="showtimes" id="showtimes"></div>
+<!-- ===== THÊM MÀN HÌNH RẠP ===== -->
+<div class="screen">SCREEN</div>
 
         <p>Chọn ghế:</p>
         <div class="seats" id="seats"></div>
@@ -274,21 +620,67 @@ header{
 let selectedMovie = "";
 let selectedSeats = [];
 let selectedTime = "";
+let selectedDate = "";
+
 
 let showtimeData = {
     "AVATAR": ["09:00", "13:30", "18:00", "21:00"],
     "ZOTOPIA": ["10:00", "14:00", "19:00"],
     "THẾ GIỚI KHỦNG LONG": ["11:00", "16:00", "20:30"],
     "XỨ SỞ CÁC NGUYÊN TỐ": ["09:30", "15:00", "18:30"],
-    "GRAVE OF THE FIRELIES": ["17:00", "20:00"]
+    "GRAVE OF THE FIRELIES": ["17:00", "20:00"],
+    "ĐÀO PHỞ VÀ PIANO": ["09:00", "14:00", "19:30"],
+    "MẮT BIẾC": ["10:00", "15:30", "20:00"],
+    "ĐẤU TRƯỜNG ÂM NHẠC 2": ["08:30", "13:00", "18:00", "21:30"],
+    "NGƯỜI VỢ CUỐI CÙNG": ["11:00", "16:30", "20:30"],
+    "BỐ GIÀ": ["09:45", "14:30", "19:00"],
+    "MAI": ["10:15", "15:00", "20:15"],
+    "NHÀ BÀ NỮ": ["09:00", "13:30", "18:30"],
+    "TRUY TÌM LONG DIÊN HƯƠNG": ["10:00", "14:00", "19:30"],
+    "QUỶ NHẬP TRÀNG": ["17:30", "20:00", "22:30"],
+    "NHÀ BA TÔI CÓ MỘT PHÒNG": ["09:00", "15:00", "19:00"],
+    "THỎ ƠI": ["08:00", "13:00", "17:00"],
+    "BÁU VẬT TRỜI CHO": ["10:30", "16:00", "20:00"],
+    "ĐỊA ĐẠO": ["09:00", "14:00", "18:00"],
+    "THIÊN ĐƯỜNG MÁU": ["11:00", "16:00", "21:00"]
 };
    function openBooking(movie){
     selectedMovie = movie;
+    renderReviews();
     selectedSeats = [];
     selectedTime = "";
+    updateTotal();
 
     document.getElementById("movieTitle").innerText = movie;
     document.getElementById("bookingModal").style.display = "flex";
+    /* ===== NGÀY CHIẾU (3 ngày tới) ===== */
+let dateBox = document.getElementById("showDates");
+dateBox.innerHTML = "";
+selectedDate = "";
+
+let today = new Date();
+
+for(let i = 0; i < 3; i++){
+    let d = new Date();
+    d.setDate(today.getDate() + i);
+
+    let formatted =
+        d.getDate().toString().padStart(2,"0") + "/" +
+        (d.getMonth()+1).toString().padStart(2,"0");
+
+    let dateDiv = document.createElement("div");
+    dateDiv.className = "time";
+    dateDiv.innerText = formatted;
+
+    dateDiv.onclick = function(){
+        document.querySelectorAll("#showDates .time")
+            .forEach(x => x.classList.remove("active"));
+        this.classList.add("active");
+        selectedDate = formatted;
+    };
+
+    dateBox.appendChild(dateDiv);
+}
 
     /* ===== GIỜ CHIẾU ===== */
     let showtimeBox = document.getElementById("showtimes");
@@ -300,7 +692,7 @@ let showtimeData = {
         t.innerText = time;
 
         t.onclick = function(){
-            document.querySelectorAll(".time").forEach(x => x.classList.remove("active"));
+            document.querySelectorAll("#showtimes .time").forEach(x => x.classList.remove("active"));
             this.classList.add("active");
             selectedTime = time;
         };
@@ -342,6 +734,10 @@ function closeBooking(){
 }
 
 function confirmBooking(){
+    if(!selectedDate){
+    alert("Bạn chưa chọn ngày xem!");
+    return;
+}
     if(!selectedTime){
         alert("Bạn chưa chọn giờ chiếu!");
         return;
@@ -356,6 +752,7 @@ function confirmBooking(){
 
     document.getElementById("successInfo").innerHTML =
         "<b>🎬 Phim:</b> " + selectedMovie + "<br>" +
+        "<b>📅 Ngày:</b> " + selectedDate + "<br>" +
         "<b>⏰ Giờ chiếu:</b> " + selectedTime + "<br>" +
         "<b>💺 Ghế:</b> " + selectedSeats.join(", ") + "<br>" +
         "<b>💰 Tổng tiền:</b> " + total.toLocaleString("vi-VN") + " VNĐ";
@@ -366,9 +763,257 @@ function confirmBooking(){
 function closeSuccess(){
     document.getElementById("successModal").style.display = "none";
 }
+document.getElementById("user").innerText =
+    localStorage.getItem("currentUser");
+    document.getElementById("searchInput")
+    .addEventListener("keyup", function(){
+
+    let keyword = this.value.toLowerCase();
+    let movies = document.querySelectorAll(".movie");
+
+    movies.forEach(movie => {
+        let title = movie.querySelector("h3")
+            .innerText.toLowerCase();
+
+        let genre = movie.querySelector(".movie-info p:not(.rating)")
+    .innerText.toLowerCase();
+
+        if(title.includes(keyword) || genre.includes(keyword)){
+            movie.style.display = "";
+        }else{
+            movie.style.display = "none";
+        }
+    });
+});
+function toggleTheme(){
+    document.body.classList.toggle("light");
+
+    if(document.body.classList.contains("light")){
+        localStorage.setItem("theme","light");
+    }else{
+        localStorage.setItem("theme","dark");
+    }
+}
+
+/* Load lại theme khi refresh */
+if(localStorage.getItem("theme") === "light"){
+    document.body.classList.add("light");
+}
+    let reviews = {
+
+"AVATAR":[
+{name:"Minh Anh",time:"15/06/2025 19:20",content:"Hình ảnh quá đẹp, xem ngoài rạp cực đã!"},
+{name:"Tuấn Khang",time:"02/08/2025 20:45",content:"Kỹ xảo đỉnh cao nhưng hơi dài."},
+{name:"Lan Chi",time:"11/11/2025 18:10",content:"Xem lần 2 vẫn nổi da gà."},
+{name:"Quốc Bảo",time:"05/01/2026 21:05",content:"Đoạn cuối hơi chậm."},
+{name:"Hải Yến",time:"24/02/2026 17:30",content:"Âm thanh và hình ảnh quá xuất sắc!"}
+],
+
+"ZOTOPIA":[
+{name:"Bảo Trâm",time:"20/06/2025 10:30",content:"Dễ thương cực kỳ."},
+{name:"Gia Huy",time:"14/09/2025 17:10",content:"Xem mà cười suốt."},
+{name:"Ngọc Hân",time:"03/12/2025 20:00",content:"Nội dung có chiều sâu."},
+{name:"Đức Minh",time:"22/01/2026 21:35",content:"Một số đoạn hơi trẻ con."},
+{name:"Mai Phương",time:"23/02/2026 19:50",content:"Hoạt hình quá chất lượng."}
+],
+
+"THẾ GIỚI KHỦNG LONG":[
+{name:"Anh Thư",time:"05/07/2025 09:00",content:"Khủng long nhìn rất thật."},
+{name:"Thanh Nam",time:"28/09/2025 14:30",content:"Hành động dồn dập."},
+{name:"Hữu Phúc",time:"10/12/2025 20:10",content:"Xem rạp mới đã."},
+{name:"Tú Linh",time:"30/01/2026 22:00",content:"Cốt truyện không mới lắm."},
+{name:"Minh Quân",time:"22/02/2026 18:20",content:"Phim khá cuốn."}
+],
+
+"XỨ SỞ CÁC NGUYÊN TỐ":[
+{name:"Kim Ngân",time:"18/06/2025 10:20",content:"Nhẹ nhàng và dễ thương."},
+{name:"Phúc Hưng",time:"09/10/2025 19:00",content:"Màu sắc rất đẹp."},
+{name:"Trà My",time:"15/12/2025 20:10",content:"Cảm động ở đoạn cuối."},
+{name:"Quang Vinh",time:"08/01/2026 18:30",content:"Nội dung hơi đơn giản."},
+{name:"Mỹ Linh",time:"21/02/2026 17:40",content:"Xem cùng người yêu rất hợp."}
+],
+
+"GRAVE OF THE FIRELIES":[
+{name:"Thảo Vy",time:"01/07/2025 21:15",content:"Khóc suốt từ đầu đến cuối."},
+{name:"Anh Đức",time:"12/10/2025 20:40",content:"Rất ám ảnh."},
+{name:"Hoài Nam",time:"02/12/2025 22:00",content:"Nặng tâm lý nhưng đáng xem."},
+{name:"Bích Ngọc",time:"25/01/2026 19:30",content:"Phim buồn quá."},
+{name:"Minh Thắng",time:"20/02/2026 18:10",content:"Tác phẩm kinh điển."}
+],
+
+"ĐÀO PHỞ VÀ PIANO":[
+{name:"Hà My",time:"22/06/2025 09:50",content:"Đậm chất Việt Nam."},
+{name:"Quốc Huy",time:"19/09/2025 19:15",content:"Không khí xưa rất chân thật."},
+{name:"Linh Chi",time:"28/11/2025 21:00",content:"Phim khá nghệ thuật."},
+{name:"Bảo Anh",time:"05/02/2026 20:30",content:"Xem hơi khó hiểu."},
+{name:"Gia Bảo",time:"23/02/2026 18:45",content:"Âm nhạc rất hay."}
+],
+
+"MẮT BIẾC":[
+{name:"Thanh Vy",time:"30/06/2025 10:00",content:"Khung cảnh quá đẹp."},
+{name:"Tuấn Kiệt",time:"14/09/2025 19:20",content:"Buồn nhưng rất hay."},
+{name:"Ngọc Ánh",time:"18/12/2025 21:10",content:"Xem mà thương nhân vật."},
+{name:"Phúc Lâm",time:"10/01/2026 18:40",content:"Nhịp phim hơi chậm."},
+{name:"Hà Phương",time:"24/02/2026 17:30",content:"Rất hợp xem cùng người yêu."}
+],
+
+"ĐẤU TRƯỜNG ÂM NHẠC 2":[
+{name:"Bảo Vy",time:"10/07/2025 08:30",content:"Nhạc rất bắt tai."},
+{name:"Minh Tài",time:"20/10/2025 13:10",content:"Xem rất giải trí."},
+{name:"Hải Anh",time:"05/12/2025 18:00",content:"Hài hước dễ thương."},
+{name:"Gia Linh",time:"02/02/2026 21:00",content:"Phần 1 hay hơn."},
+{name:"Tuấn Phát",time:"23/02/2026 19:10",content:"Trẻ em chắc thích lắm."}
+]
+
+,
+
+"NGƯỜI VỢ CUỐI CÙNG":[
+{name:"Hồng Nhung",time:"12/07/2025 19:20",content:"Trang phục cổ trang rất đẹp."},
+{name:"Quốc Thiên",time:"25/09/2025 20:40",content:"Diễn xuất ổn nhưng nhịp phim chậm."},
+{name:"Mỹ Duyên",time:"14/11/2025 18:15",content:"Câu chuyện khá cảm động."},
+{name:"Hoàng Long",time:"09/01/2026 21:00",content:"Xem hơi dài nhưng đáng xem."},
+{name:"Thanh Trúc",time:"22/02/2026 19:30",content:"Bối cảnh rất đầu tư."}
+],
+
+"BỐ GIÀ":[
+{name:"Minh Hoàng",time:"18/06/2025 20:00",content:"Rất đời và chân thật."},
+{name:"Ngọc Huyền",time:"07/09/2025 18:45",content:"Khóc nhiều đoạn."},
+{name:"Anh Vũ",time:"21/12/2025 19:30",content:"Gia đình xem rất hợp."},
+{name:"Thu Hà",time:"05/01/2026 20:10",content:"Một vài cảnh hơi dài."},
+{name:"Quang Hải",time:"24/02/2026 18:20",content:"Phim Việt rất đáng tự hào."}
+],
+
+"MAI":[
+{name:"Bích Trâm",time:"28/06/2025 21:00",content:"Cảm xúc mạnh và sâu."},
+{name:"Tuấn Anh",time:"10/10/2025 19:40",content:"Diễn xuất rất tốt."},
+{name:"Gia Hân",time:"16/12/2025 20:20",content:"Khá buồn nhưng hay."},
+{name:"Hoài Phương",time:"03/02/2026 18:50",content:"Nhạc phim rất hợp cảnh."},
+{name:"Minh Tâm",time:"23/02/2026 21:10",content:"Xem xong vẫn còn suy nghĩ."}
+],
+
+"NHÀ BÀ NỮ":[
+{name:"Trúc Anh",time:"05/07/2025 17:30",content:"Gia đình xem rất hợp."},
+{name:"Hải Đăng",time:"22/09/2025 20:15",content:"Có vài đoạn khá căng thẳng."},
+{name:"Bảo Ngọc",time:"12/11/2025 18:00",content:"Diễn viên diễn tự nhiên."},
+{name:"Tuấn Vinh",time:"08/01/2026 19:50",content:"Nội dung gần gũi."},
+{name:"Thanh Hằng",time:"21/02/2026 20:00",content:"Xem rất xúc động."}
+],
+
+"TRUY TÌM LONG DIÊN HƯƠNG":[
+{name:"Quốc Bảo",time:"15/06/2025 10:00",content:"Hành động mãn nhãn."},
+{name:"Mai Lan",time:"18/09/2025 19:00",content:"Phim khá kịch tính."},
+{name:"Minh Phúc",time:"20/12/2025 21:20",content:"Xem rạp rất đã."},
+{name:"Hải My",time:"11/01/2026 18:30",content:"Cốt truyện hơi khó hiểu."},
+{name:"Gia Minh",time:"24/02/2026 17:45",content:"Phim Việt làm hành động tốt thật."}
+],
+
+"QUỶ NHẬP TRÀNG":[
+{name:"Anh Thư",time:"02/07/2025 22:00",content:"Hù giật mình liên tục."},
+{name:"Hữu Nghĩa",time:"14/10/2025 20:30",content:"Xem buổi tối hơi ám ảnh."},
+{name:"Ngọc Diễm",time:"03/12/2025 21:45",content:"Âm thanh rất đáng sợ."},
+{name:"Tuấn Khoa",time:"29/01/2026 22:10",content:"Cốt truyện ổn."},
+{name:"Kim Anh",time:"23/02/2026 21:30",content:"Phim kinh dị Việt khá tốt."}
+],
+
+"NHÀ BA TÔI CÓ MỘT PHÒNG":[
+{name:"Thanh Tùng",time:"20/06/2025 16:10",content:"Xem khá giải trí."},
+{name:"Hà Vy",time:"08/09/2025 19:00",content:"Tình tiết hài nhẹ nhàng."},
+{name:"Minh Hạnh",time:"15/11/2025 18:20",content:"Gia đình xem rất hợp."},
+{name:"Bảo Lâm",time:"07/01/2026 20:30",content:"Có đoạn hơi dài."},
+{name:"Quỳnh Anh",time:"24/02/2026 18:10",content:"Phim khá dễ thương."}
+],
+
+"THỎ ƠI":[
+{name:"Gia Linh",time:"12/07/2025 09:30",content:"Trẻ em chắc rất thích."},
+{name:"Minh Đức",time:"21/09/2025 13:15",content:"Hài hước dễ xem."},
+{name:"Bích Ngân",time:"18/12/2025 17:40",content:"Xem cùng gia đình rất vui."},
+{name:"Hoàng Phúc",time:"02/02/2026 18:00",content:"Nội dung hơi đơn giản."},
+{name:"Thanh Vy",time:"22/02/2026 16:50",content:"Phim dễ thương."}
+],
+
+"BÁU VẬT TRỜI CHO":[
+{name:"Hải Yến",time:"30/06/2025 19:00",content:"Xem khá hài."},
+{name:"Quang Minh",time:"16/10/2025 20:30",content:"Nội dung ổn."},
+{name:"Mai Thảo",time:"04/12/2025 18:10",content:"Gia đình xem hợp lý."},
+{name:"Tuấn Nam",time:"10/01/2026 19:40",content:"Có vài đoạn hơi dài."},
+{name:"Ngọc Lan",time:"23/02/2026 18:55",content:"Khá dễ xem."}
+],
+
+"ĐỊA ĐẠO":[
+{name:"Minh Quân",time:"14/06/2025 10:30",content:"Lịch sử tái hiện rất chân thật."},
+{name:"Hà Trang",time:"22/09/2025 19:20",content:"Xem mà nổi da gà."},
+{name:"Quốc Hưng",time:"11/12/2025 20:40",content:"Rất đáng xem."},
+{name:"Bảo Vy",time:"05/02/2026 18:10",content:"Có đoạn hơi nặng."},
+{name:"Thanh Long",time:"24/02/2026 17:20",content:"Phim lịch sử Việt rất hay."}
+],
+
+"THIÊN ĐƯỜNG MÁU":[
+{name:"Gia Bảo",time:"08/07/2025 20:10",content:"Hành động mãn nhãn."},
+{name:"Linh Đan",time:"19/10/2025 19:50",content:"Kịch tính từ đầu đến cuối."},
+{name:"Minh Trí",time:"15/12/2025 21:10",content:"Xem rất cuốn."},
+{name:"Anh Khoa",time:"30/01/2026 20:30",content:"Âm thanh rất tốt."},
+{name:"Hải Nam",time:"23/02/2026 19:40",content:"Phim rất đã khi xem rạp."}
+]
+    };
+
+function addReview(){
+    let name = document.getElementById("reviewName").value;
+    let content = document.getElementById("reviewContent").value;
+
+    if(!name || !content){
+        alert("Vui lòng nhập đủ thông tin!");
+        return;
+    }
+
+    let now = new Date();
+    let time = now.toLocaleString();
+
+    if(!reviews[selectedMovie]){
+    reviews[selectedMovie] = [];
+}
+
+reviews[selectedMovie].push({
+        name: name,
+        content: content,
+        time: time
+    });
+
+    document.getElementById("reviewName").value="";
+    document.getElementById("reviewContent").value="";
+
+    renderReviews();
+}
+
+function renderReviews(){
+    let list = document.getElementById("reviewList");
+    list.innerHTML="";
+
+    if(!reviews[selectedMovie]) return;
+
+reviews[selectedMovie].forEach(r=>{
+        list.innerHTML += `
+            <div class="review-item">
+                <strong>${r.name}</strong>
+                <small>${r.time}</small>
+                <p>${r.content}</p>
+            </div>
+        `;
+    });
+}
 </script>
+<!-- ===== CONTACT CARD ĐẸP ===== -->
+<div class="contact-card">
+    <div class="contact-title">🎬 MOVIE PROJECT</div>
+    <div class="contact-name">Nghi Nguyễn</div>
+    
+    <div class="contact-item">
+        📘 <a href="https://www.facebook.com/share/1AbTHvfoQD/?mibextid=wwXIfr" target="_blank">Facebook</a>
+    </div>
+    
+    <div class="contact-item">
+        📧 <a href="Ntphuongnghi20051008@gmail.com">yourmail@gmail.com</a>
+    </div>
+</div>
 </body>
 </html>
-
-
 

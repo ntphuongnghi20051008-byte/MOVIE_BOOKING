@@ -533,6 +533,42 @@ select{
         box-shadow: 0 0 35px rgba(0,255,255,0.8);
     }
 }
+    /* ===== KHUNG MÔ TẢ PHIM NEON ===== */
+.movie-desc-box{
+    background: linear-gradient(135deg,#00ffff,#ff00cc);
+    padding: 3px;
+    border-radius: 18px;
+    margin-bottom: 20px;
+    box-shadow: 0 0 20px #00ffff,
+                0 0 35px #ff00cc;
+    animation: glowDesc 2s infinite alternate;
+}
+
+.movie-desc-box h2{
+    margin:0 0 10px 0;
+    font-size:28px;
+    font-weight:800;
+    color:white;
+    text-shadow: 0 0 10px #fff;
+}
+
+.movie-desc-box p{
+    background:#111;
+    padding:15px;
+    border-radius:15px;
+    font-size:15px;
+    line-height:1.6;
+    color:#eaeaea;
+}
+
+@keyframes glowDesc{
+    from{
+        box-shadow: 0 0 15px #00ffff;
+    }
+    to{
+        box-shadow: 0 0 35px #ff00cc;
+    }
+}
 </style>
 </head>
 
@@ -795,8 +831,10 @@ Xin chào: <span id="user"></span> |
     
     <div class="modal-content">
         <span class="close" onclick="closeBooking()">X</span>
-     <h2 id="movieTitle"></h2>
-<p id="movieDesc" style="font-size:14px; margin:8px 0; color:#ccc;"></p>
+<div class="movie-desc-box">
+    <h2 id="movieTitle"></h2>
+    <p id="movieDesc"></p>
+</div>
 <h3>Đánh giá</h3>
 
 <div id="reviewList"></div>
@@ -1526,6 +1564,7 @@ animate();
 </script>
 </body>
 </html>
+
 
 
 

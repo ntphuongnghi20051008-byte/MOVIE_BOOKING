@@ -386,10 +386,122 @@ body.light .review-item small{
 select{
     margin-bottom:10px;
 }
+    /* ===== KHUNG CHI TIẾT PHIM ===== */
+.movie-detail{
+    background: linear-gradient(145deg,#111,#1c1c1c);
+    border-radius:20px;
+    padding:25px;
+    box-shadow:0 0 30px rgba(0,255,255,0.1);
+    color:white;
+    max-width:800px;
+    margin:auto;
+}
+
+/* ===== TIÊU ĐỀ ===== */
+.movie-detail h2{
+    font-size:32px;
+    color:#00ffff;
+    letter-spacing:2px;
+}
+
+/* ===== MÔ TẢ ===== */
+.movie-detail p{
+    color:#ccc;
+    line-height:1.6;
+}
+
+/* ===== TIÊU ĐỀ ĐÁNH GIÁ ===== */
+.review-title{
+    font-size:22px;
+    margin-top:20px;
+    color:#ff4d6d;
+}
+
+/* ===== CARD ĐÁNH GIÁ ===== */
+.review{
+    background: rgba(255,255,255,0.05);
+    border-left:4px solid #00ffff;
+    padding:12px 15px;
+    margin:12px 0;
+    border-radius:12px;
+    transition:0.3s;
+}
+
+.review:hover{
+    transform:translateX(5px);
+    background: rgba(0,255,255,0.08);
+    box-shadow:0 0 15px rgba(0,255,255,0.3);
+}
+
+.review strong{
+    color:#00ffff;
+}
+
+.review small{
+    color:#aaa;
+}
+
+/* ===== FORM ===== */
+.review-form{
+    margin-top:20px;
+    background:rgba(255,255,255,0.03);
+    padding:15px;
+    border-radius:15px;
+    box-shadow:0 0 20px rgba(255,0,100,0.1);
+}
+
+/* INPUT & TEXTAREA */
+.review-form input,
+.review-form textarea{
+    width:100%;
+    padding:10px;
+    margin-bottom:10px;
+    border:none;
+    border-radius:10px;
+    background:#111;
+    color:white;
+    border:1px solid rgba(0,255,255,0.3);
+    transition:0.3s;
+}
+
+.review-form input:focus,
+.review-form textarea:focus{
+    outline:none;
+    border:1px solid #00ffff;
+    box-shadow:0 0 10px #00ffff;
+}
+
+/* BUTTON */
+.review-form button{
+    width:100%;
+    padding:10px;
+    border:none;
+    border-radius:12px;
+    background:linear-gradient(45deg,#00ffff,#ff00cc);
+    color:white;
+    font-weight:bold;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.review-form button:hover{
+    transform:scale(1.05);
+    box-shadow:0 0 20px #ff00cc;
+}
+    #galaxy{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    z-index:-1;
+    background: radial-gradient(ellipse at bottom, #0b0c2a 0%, #000000 100%);
+}
 </style>
 </head>
 
 <body>
+    <canvas id="galaxy"></canvas>
     <script>
 if(!localStorage.getItem("currentUser")){
     window.location.href = "index.html";
@@ -635,7 +747,7 @@ Xin chào: <span id="user"></span> |
 <!-- Modal Booking -->
  <!-- Modal Success -->
 <div class="modal" id="successModal">
-  <div class="modal-content">
+  <div class="modal-content movie-detail">
     <h2>🎉 ĐẶT VÉ THÀNH CÔNG</h2>
     <p id="successInfo"></p>
     <button onclick="closeSuccess()">Đóng</button>
@@ -653,7 +765,7 @@ Xin chào: <span id="user"></span> |
 
 <div id="reviewList"></div>
 
-<div class="review-box">
+<div class="review-form">
     <input type="text" id="reviewName" placeholder="Tên của bạn">
     <textarea id="reviewContent" placeholder="Nhập đánh giá..."></textarea>
     <button onclick="addReview()">Gửi đánh giá</button>
@@ -1183,7 +1295,7 @@ function renderReviews(){
 
 reviews[selectedMovie].forEach(r=>{
         list.innerHTML += `
-            <div class="review-item">
+            <div class="review">
                 <strong>${r.name}</strong>
                 <small>${r.time}</small>
                 <p>${r.content}</p>
@@ -1238,6 +1350,87 @@ reviews[selectedMovie].forEach(r=>{
         document.getElementById("momoPayment").style.display = "flex";
     }
 }
+    /* ===== GALAXY BACKGROUND ===== */
+const canvas = document.getElementById("galaxy");
+const ctx = canvas.getContext("2d");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let stars = [];
+let shootingStars = [];
+
+/* Tạo sao nhỏ */
+for(let i=0;i<200;i++){
+    stars.push({
+        x: Math.random()*canvas.width,
+        y: Math.random()*canvas.height,
+        size: Math.random()*2,
+        speed: Math.random()*0.3
+    });
+}
+
+/* Tạo sao băng */
+function createShootingStar(){
+    shootingStars.push({
+        x: Math.random()*canvas.width,
+        y: 0,
+        length: Math.random()*80+50,
+        speed: Math.random()*6+4,
+        opacity: 1
+    });
+}
+
+/* Vẽ */
+function animate(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+
+    // sao nhỏ
+    ctx.fillStyle="white";
+    stars.forEach(star=>{
+        ctx.beginPath();
+        ctx.arc(star.x,star.y,star.size,0,Math.PI*2);
+        ctx.fill();
+
+        star.y += star.speed;
+        if(star.y > canvas.height){
+            star.y = 0;
+        }
+    });
+
+    // sao băng
+    shootingStars.forEach((s,i)=>{
+        ctx.strokeStyle = "rgba(255,255,255,"+s.opacity+")";
+        ctx.lineWidth=2;
+        ctx.beginPath();
+        ctx.moveTo(s.x,s.y);
+        ctx.lineTo(s.x - s.length, s.y + s.length);
+        ctx.stroke();
+
+        s.x -= s.speed;
+        s.y += s.speed;
+        s.opacity -= 0.01;
+
+        if(s.opacity <= 0){
+            shootingStars.splice(i,1);
+        }
+    });
+
+    requestAnimationFrame(animate);
+}
+
+animate();
+
+/* Tạo sao băng mỗi vài giây */
+setInterval(()=>{
+    createShootingStar();
+},2000);
+
+/* Resize khi thay đổi màn hình */
+window.addEventListener("resize",()=>{
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+});
 </script>
 <!-- ===== CONTACT CARD ĐẸP ===== -->
 <div class="contact-card">
@@ -1256,6 +1449,7 @@ Ntphuongnghi20051008@gmail.com
 </div>
 </body>
 </html>
+
 
 
 

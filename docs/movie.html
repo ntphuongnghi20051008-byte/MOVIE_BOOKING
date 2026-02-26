@@ -497,6 +497,42 @@ select{
     z-index:-1;
     background: radial-gradient(ellipse at bottom, #0b0c2a 0%, #000000 100%);
 }
+    /* ===== MOVIE TITLE BOX ===== */
+.movie-title-box{
+    background: linear-gradient(135deg, rgba(0,0,0,0.9), rgba(30,30,60,0.9));
+    border: 3px solid #00f7ff;
+    border-radius: 15px;
+    padding: 25px;
+    margin-bottom: 20px;
+    box-shadow: 0 0 20px rgba(0,255,255,0.6),
+                0 0 40px rgba(0,255,255,0.4);
+    backdrop-filter: blur(8px);
+    animation: glowBox 2s infinite alternate;
+}
+
+.movie-title-box h1{
+    font-size: 36px;
+    font-weight: 800;
+    color: #00f7ff;
+    text-shadow: 0 0 10px #00f7ff,
+                 0 0 20px #00f7ff;
+    margin-bottom: 10px;
+}
+
+.movie-title-box p{
+    color: #e0e0e0;
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+@keyframes glowBox{
+    from{
+        box-shadow: 0 0 15px rgba(0,255,255,0.4);
+    }
+    to{
+        box-shadow: 0 0 35px rgba(0,255,255,0.8);
+    }
+}
 </style>
 </head>
 
@@ -1447,8 +1483,50 @@ Ntphuongnghi20051008@gmail.com
 </a>
     </div>
 </div>
+    <script>
+const canvas = document.getElementById("galaxy");
+const ctx = canvas.getContext("2d");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let stars = [];
+
+for(let i = 0; i < 200; i++){
+    stars.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        size: Math.random() * 2,
+        speed: Math.random() * 0.5 + 0.2
+    });
+}
+
+function animate(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+
+    ctx.fillStyle = "white";
+
+    stars.forEach(star=>{
+        ctx.beginPath();
+        ctx.arc(star.x, star.y, star.size, 0, Math.PI*2);
+        ctx.fill();
+
+        star.y += star.speed;
+
+        if(star.y > canvas.height){
+            star.y = 0;
+            star.x = Math.random() * canvas.width;
+        }
+    });
+
+    requestAnimationFrame(animate);
+}
+
+animate();
+</script>
 </body>
 </html>
+
 
 
 

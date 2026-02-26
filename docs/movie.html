@@ -276,36 +276,26 @@ header{
 }
 
 .review-item{
-    background: linear-gradient(145deg,#1e1e1e,#2c2c2c);
-    padding:15px;
-    margin:10px 0;
-    border-radius:12px;
-    border:1px solid #333;
-    box-shadow:0 4px 10px rgba(0,0,0,0.4);
-    transition:0.3s;
-}
-
-.review-item:hover{
-    transform: translateY(-3px);
-    border-color:#09e5cf;
+    background:#1e1e1e;
+    padding:8px 10px;
+    margin:6px 0;
+    border-radius:8px;
+    border-left:3px solid #09e5cf;
+    font-size:13px;
 }
 
 .review-item strong{
-    color:#09e5cf;
-    font-size:15px;
+    font-size:13px;
 }
 
 .review-item small{
-    display:block;
-    font-size:12px;
+    font-size:11px;
     color:#aaa;
-    margin-bottom:6px;
 }
 
 .review-item p{
-    margin:0;
-    font-size:14px;
-    line-height:1.5;
+    margin:3px 0 0 0;
+    font-size:13px;
 }
 
 body.light .review-item{
@@ -380,6 +370,22 @@ body.light .review-item{
 body.light .review-item small{
     color:#666;
 }
+    .payment-box{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    margin-top:10px;
+}
+
+.payment-box input, select{
+    padding:8px;
+    border-radius:6px;
+    border:1px solid #ccc;
+}
+
+select{
+    margin-bottom:10px;
+}
 </style>
 </head>
 
@@ -430,6 +436,18 @@ Xin chào: <span id="user"></span> |
 </span>
 </div>
 </header>
+   <!-- CHỌN KHU VỰC RẠP -->
+<div style="text-align:center; margin:15px;">
+  <label style="font-size:18px;">📍 Chọn khu vực: </label>
+
+  <select id="citySelect" onchange="filterByCity()" 
+          style="padding:8px 12px; border-radius:6px; border:none;">
+    <option value="all">Tất cả</option>
+    <option value="hcm">TP. Hồ Chí Minh</option>
+    <option value="hn">Hà Nội</option>
+    <option value="dn">Đà Nẵng</option>
+  </select>
+</div> 
 <!-- 🔎 THANH TÌM KIẾM -->
 <div style="text-align:center; margin:20px;">
     <input type="text" id="searchInput"
@@ -630,7 +648,8 @@ Xin chào: <span id="user"></span> |
     <div class="modal-content">
         <span class="close" onclick="closeBooking()">X</span>
      <h2 id="movieTitle"></h2>
-     <h3>Đánh giá</h3>
+<p id="movieDesc" style="font-size:14px; margin:8px 0; color:#ccc;"></p>
+<h3>Đánh giá</h3>
 
 <div id="reviewList"></div>
 
@@ -641,6 +660,13 @@ Xin chào: <span id="user"></span> |
 </div>
 
 <p>Chọn ngày xem:</p>
+        <p>Chọn cụm rạp:</p>
+<select id="cinemaSelect" style="padding:8px;border-radius:6px;border:1px solid #ccc;">
+    <option value="">-- Chọn rạp --</option>
+    <option value="TP. Hồ Chí Minh">TP. Hồ Chí Minh</option>
+    <option value="Hà Nội">Hà Nội</option>
+    <option value="Đà Nẵng">Đà Nẵng</option>
+</select>
 <div class="showtimes" id="showDates"></div>
 
 <p>Chọn giờ chiếu:</p>
@@ -651,6 +677,27 @@ Xin chào: <span id="user"></span> |
         <p>Chọn ghế:</p>
         <div class="seats" id="seats"></div>
         <p><strong>Tổng tiền: </strong><span id="totalPrice">0</span> VNĐ</p>
+        <hr>
+
+<h3>Thanh toán</h3>
+
+<label>Phương thức thanh toán:</label>
+<select id="paymentMethod" onchange="changePayment()">
+    <option value="card">Thẻ ngân hàng</option>
+    <option value="momo">MoMo</option>
+    <option value="cash">Thanh toán tại rạp</option>
+</select>
+
+<div id="cardPayment" class="payment-box">
+    <input type="text" id="cardName" placeholder="Tên chủ thẻ">
+    <input type="text" id="cardNumber" placeholder="Số thẻ">
+    <input type="text" id="cardDate" placeholder="MM/YY">
+    <input type="text" id="cardCvv" placeholder="CVV">
+</div>
+
+<div id="momoPayment" class="payment-box" style="display:none;">
+    <input type="text" id="momoPhone" placeholder="Số điện thoại MoMo">
+</div>
         <button onclick="confirmBooking()">Xác nhận đặt vé</button>
     </div>
 </div>
@@ -690,6 +737,67 @@ let showtimeData = {
     "BÁU VẬT TRỜI CHO": ["10:30", "16:00", "20:00"],
     "ĐỊA ĐẠO": ["09:00", "14:00", "18:00"],
     "THIÊN ĐƯỜNG MÁU": ["11:00", "16:00", "21:00"]
+    
+};
+    let movieDescriptions = {
+
+"AVATAR":
+"Jake Sully tham gia chương trình Avatar để thâm nhập hành tinh Pandora. Tại đây, anh dần gắn bó với người Na'vi và phải lựa chọn giữa nhiệm vụ và lương tâm. Bộ phim nổi bật với kỹ xảo hoành tráng và thông điệp bảo vệ thiên nhiên.",
+
+"ZOTOPIA":
+"Chú thỏ Judy Hopps trở thành cảnh sát đầu tiên của thành phố Zootopia. Cô hợp tác cùng cáo Nick Wilde để điều tra vụ mất tích bí ẩn. Phim mang thông điệp về ước mơ, định kiến và sự công bằng.",
+
+"THẾ GIỚI KHỦNG LONG":
+"Một công viên khủng long sinh học bị mất kiểm soát khi sinh vật lai nguy hiểm thoát ra ngoài. Nhóm nhân vật phải chiến đấu để sinh tồn và bảo vệ du khách. Phim đầy kịch tính và hiệu ứng mãn nhãn.",
+
+"XỨ SỞ CÁC NGUYÊN TỐ":
+"Câu chuyện tình yêu giữa Ember (lửa) và Wade (nước) tại thành phố của các nguyên tố. Hai cá tính đối lập dần thấu hiểu và vượt qua định kiến. Phim nhẹ nhàng, sâu sắc và đầy màu sắc.",
+
+"GRAVE OF THE FIRELIES":
+"Hai anh em Seita và Setsuko cố gắng sống sót trong Thế chiến II tại Nhật Bản. Bộ phim khắc họa nỗi đau chiến tranh và tình thân thiêng liêng. Một tác phẩm cảm động và ám ảnh.",
+
+"ĐÀO PHỞ VÀ PIANO":
+"Lấy bối cảnh Hà Nội thời chiến, phim kể về tình yêu và nghệ thuật giữa bom đạn. Những con người bình dị vẫn giữ vững niềm tin và khát vọng sống. Tác phẩm đậm chất lịch sử và nhân văn.",
+
+"MẮT BIẾC":
+"Câu chuyện tình đơn phương của Ngạn dành cho Hà Lan từ thời thơ ấu đến trưởng thành. Tình yêu chân thành nhưng nhiều day dứt. Phim giàu cảm xúc và mang đậm chất thơ Việt Nam.",
+
+"ĐẤU TRƯỜNG ÂM NHẠC 2":
+"Buster Moon tiếp tục hành trình đưa nhóm ca sĩ tài năng đến sân khấu lớn hơn. Họ phải vượt qua nỗi sợ và giới hạn bản thân. Phim sôi động với nhiều ca khúc nổi tiếng.",
+
+"NGƯỜI VỢ CUỐI CÙNG":
+"Bối cảnh phong kiến Việt Nam, một người phụ nữ trở thành vợ lẽ trong gia đình quyền quý. Cô đấu tranh giữa lễ giáo và khát vọng tự do. Phim gây ấn tượng bởi bối cảnh và trang phục cổ trang.",
+
+"BỐ GIÀ":
+"Ba Sang – người cha lao động nghèo – luôn hy sinh vì gia đình. Mâu thuẫn thế hệ và áp lực cuộc sống khiến tình cảm cha con rạn nứt. Phim chân thật, gần gũi và đầy xúc động.",
+
+"MAI":
+"Mai – một phụ nữ chịu nhiều tổn thương trong tình yêu – gặp gỡ chàng trai trẻ đầy nhiệt huyết. Mối quan hệ của họ đối mặt với định kiến xã hội và quá khứ đau buồn. Phim khai thác tâm lý sâu sắc.",
+
+"NHÀ BÀ NỮ":
+"Câu chuyện về gia đình nhiều thế hệ với những mâu thuẫn, tổn thương và bí mật. Tình cảm gia đình được thử thách qua biến cố. Phim phản ánh thực tế đời sống hiện đại.",
+
+"TRUY TÌM LONG DIÊN HƯƠNG":
+"Một nhóm nhân vật bước vào hành trình truy tìm bảo vật bí ẩn. Họ phải đối đầu với âm mưu và những trận chiến nguy hiểm. Phim pha trộn hành động và yếu tố tâm linh.",
+
+"QUỶ NHẬP TRÀNG":
+"Câu chuyện kinh dị xoay quanh hiện tượng tâm linh rùng rợn tại một vùng quê. Những bí mật dần được hé lộ qua loạt sự kiện đáng sợ. Phim đậm màu sắc dân gian Việt.",
+
+"NHÀ BA TÔI CÓ MỘT PHÒNG":
+"Một gia đình bình thường bỗng gặp tình huống trớ trêu liên quan đến căn phòng đặc biệt trong nhà. Những tình tiết hài hước xen lẫn cảm xúc gia đình. Phim nhẹ nhàng, dễ xem.",
+
+"THỎ ƠI":
+"Phim hoạt hình kể về hành trình phiêu lưu của chú thỏ đáng yêu. Cậu học cách trưởng thành và bảo vệ bạn bè. Tác phẩm phù hợp cho gia đình và trẻ nhỏ.",
+
+"BÁU VẬT TRỜI CHO":
+"Một gia đình bất ngờ nhận được món quà đặc biệt thay đổi cuộc sống. Họ học cách trân trọng tình thân và những giá trị giản dị. Phim mang màu sắc hài hước và ấm áp.",
+
+"ĐỊA ĐẠO":
+"Tái hiện cuộc sống và chiến đấu của quân dân trong hệ thống địa đạo thời kháng chiến. Những hy sinh thầm lặng được khắc họa chân thực. Phim đậm chất lịch sử và tự hào dân tộc.",
+
+"THIÊN ĐƯỜNG MÁU":
+"Một vụ án bí ẩn kéo theo chuỗi hành động căng thẳng và đẫm máu. Nhân vật chính phải đối mặt với âm mưu nguy hiểm. Phim hành động gay cấn và giàu kịch tính."
+
 };
    function openBooking(movie){
     selectedMovie = movie;
@@ -698,8 +806,9 @@ let showtimeData = {
     selectedTime = "";
     updateTotal();
 
-    document.getElementById("movieTitle").innerText = movie;
-    document.getElementById("bookingModal").style.display = "flex";
+document.getElementById("movieTitle").innerText = movie;
+document.getElementById("movieDesc").innerText = movieDescriptions[movie] || "";
+document.getElementById("bookingModal").style.display = "flex";
     /* ===== NGÀY CHIẾU (3 ngày tới) ===== */
 let dateBox = document.getElementById("showDates");
 dateBox.innerHTML = "";
@@ -781,27 +890,62 @@ function closeBooking(){
 }
 
 function confirmBooking(){
+
+    let cinema = document.getElementById("cinemaSelect").value;
+
+    if(!cinema){
+        alert("Bạn chưa chọn cụm rạp!");
+        return;
+    }
+
     if(!selectedDate){
-    alert("Bạn chưa chọn ngày xem!");
-    return;
-}
+        alert("Bạn chưa chọn ngày xem!");
+        return;
+    }
+
     if(!selectedTime){
         alert("Bạn chưa chọn giờ chiếu!");
         return;
     }
 
-    if(selectedSeats.length == 0){
+    if(selectedSeats.length === 0){
         alert("Bạn chưa chọn ghế!");
         return;
+    }
+
+    let paymentMethod = document.getElementById("paymentMethod").value;
+
+    // Kiểm tra thanh toán
+    if(paymentMethod === "card"){
+        let name = document.getElementById("cardName").value.trim();
+        let number = document.getElementById("cardNumber").value.trim();
+        let date = document.getElementById("cardDate").value.trim();
+        let cvv = document.getElementById("cardCvv").value.trim();
+
+        if(!name || !number || !date || !cvv){
+            alert("Vui lòng nhập đủ thông tin thẻ!");
+            return;
+        }
+    }
+
+    if(paymentMethod === "momo"){
+        let phone = document.getElementById("momoPhone").value.trim();
+
+        if(!phone){
+            alert("Vui lòng nhập số điện thoại MoMo!");
+            return;
+        }
     }
 
     let total = selectedSeats.length * ticketPrice;
 
     document.getElementById("successInfo").innerHTML =
         "<b>🎬 Phim:</b> " + selectedMovie + "<br>" +
+        "<b>🎯 Cụm rạp:</b> " + cinema + "<br>" +
         "<b>📅 Ngày:</b> " + selectedDate + "<br>" +
         "<b>⏰ Giờ chiếu:</b> " + selectedTime + "<br>" +
         "<b>💺 Ghế:</b> " + selectedSeats.join(", ") + "<br>" +
+        "<b>💳 Thanh toán:</b> " + paymentMethod.toUpperCase() + "<br>" +
         "<b>💰 Tổng tiền:</b> " + total.toLocaleString("vi-VN") + " VNĐ";
 
     closeBooking();
@@ -1051,6 +1195,49 @@ reviews[selectedMovie].forEach(r=>{
     localStorage.removeItem("currentUser");
     window.location.href = "index.html";
 }
+    function filterByCity(){
+    let city = document.getElementById("citySelect").value;
+    let movies = document.querySelectorAll(".movie");
+
+    movies.forEach(movie => {
+
+        // Gán khu vực giả lập theo tên phim
+        let title = movie.querySelector("h3").innerText;
+
+        let movieCity = "hcm"; // mặc định
+
+        if(title.includes("BỐ") || title.includes("MAI")){
+            movieCity = "hn";
+        }
+
+        if(title.includes("ĐỊA") || title.includes("THIÊN")){
+            movieCity = "dn";
+        }
+
+        if(city === "all"){
+            movie.style.display = "";
+        } 
+        else if(movieCity === city){
+            movie.style.display = "";
+        } 
+        else{
+            movie.style.display = "none";
+        }
+
+    });
+}
+    function changePayment(){
+    const method = document.getElementById("paymentMethod").value;
+    document.getElementById("cardPayment").style.display = "none";
+    document.getElementById("momoPayment").style.display = "none";
+
+    if(method === "card"){
+        document.getElementById("cardPayment").style.display = "flex";
+    }
+    if(method === "momo"){
+        document.getElementById("momoPayment").style.display = "flex";
+    }
+}
 </script>
 <!-- ===== CONTACT CARD ĐẸP ===== -->
 <div class="contact-card">
@@ -1062,10 +1249,13 @@ reviews[selectedMovie].forEach(r=>{
     </div>
     
     <div class="contact-item">
-        📧 <a href="Ntphuongnghi20051008@gmail.com">yourmail@gmail.com</a>
+        📧 <a href="mailto:Ntphuongnghi20051008@gmail.com">
+Ntphuongnghi20051008@gmail.com
+</a>
     </div>
 </div>
 </body>
 </html>
+
 
 

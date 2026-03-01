@@ -149,12 +149,29 @@ function register(){
 }
 
 /* ===== ĐĂNG NHẬP ===== */
+/* ===== ĐĂNG NHẬP ===== */
 function login(){
     let u = user.value.trim();
     let p = pass.value.trim();
 
+    if(u === "" || p === ""){
+        msg.style.color = "#ff4c4c";
+        msg.innerText = "Vui lòng nhập đầy đủ thông tin!";
+        return;
+    }
+
+    /* ===== TÀI KHOẢN ADMIN CỐ ĐỊNH ===== */
+    if(u === "admin" && p === "123"){
+        localStorage.setItem("currentUser", "admin");
+        localStorage.setItem("role", "admin");
+        window.location.href = "admin.html"; 
+        return;
+    }
+
+    /* ===== TÀI KHOẢN NGƯỜI DÙNG ===== */
     if(localStorage.getItem(u) === p){
         localStorage.setItem("currentUser", u);
+        localStorage.setItem("role", "user");
         window.location.href = "movie.html";
     }else{
         msg.style.color = "#ff4c4c";
@@ -174,3 +191,4 @@ function togglePassword(){
 
 </body>
 </html>
+

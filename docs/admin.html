@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Admin Dashboard</title>
+
+<style>
+body{
+    margin:0;
+    font-family:Arial;
+    background:#111;
+    color:white;
+    padding:30px;
+}
+
+h2{
+    text-align:center;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:30px;
+}
+
+th, td{
+    border:1px solid #444;
+    padding:10px;
+    text-align:center;
+}
+
+th{
+    background:#e50914;
+}
+
+button{
+    padding:6px 10px;
+    border:none;
+    border-radius:5px;
+    cursor:pointer;
+}
+
+.delete-btn{
+    background:red;
+    color:white;
+}
+
+.logout-btn{
+    background:#09e5cf;
+    color:black;
+    float:right;
+}
+</style>
+</head>
+
+<body>
+
+<h2>👑 ADMIN - DANH SÁCH ĐẶT VÉ</h2>
+
+<button class="logout-btn" onclick="logout()">Đăng xuất</button>
+
+<table>
+    <thead>
+        <tr>
+            <th>Người đặt</th>
+            <th>Phim</th>
+            <th>Rạp</th>
+            <th>Ghế</th>
+            <th>Thời gian</th>
+            <th>Hành động</th>
+        </tr>
+    </thead>
+    <tbody id="bookingTable"></tbody>
+</table>
+
+<script>
+
+/* ===== KIỂM TRA QUYỀN ADMIN ===== */
+if(localStorage.getItem("role") !== "admin"){
+    window.location.href = "index.html";
+}
+
+/* ===== HIỂN THỊ DANH SÁCH ===== */
+function loadBookings(){
+    let bookings = JSON.parse(localStorage.getItem("bookings")) || [];
+    let table = document.getElementById("bookingTable");
+
+    table.innerHTML = "";
+
+    bookings.forEach((b, index)=>{
+        table.innerHTML += `
+            <tr>
+                <td>${b.user}</td>
+                <td>${b.movie}</td>
+                <td>${b.cinema}</td>
+                <td>${b.seats}</td>
+                <td>${b.date}</td>
+                <td>
+                    <button class="delete-btn" onclick="deleteBooking(${index})">Xoá</button>
+                </td>
+            </tr>
+        `;
+    });
+}
+
+/* ===== XOÁ VÉ ===== */
+function deleteBooking(index){
+    let bookings = JSON.parse(localStorage.getItem("bookings")) || [];
+    bookings.splice(index,1);
+    localStorage.setItem("bookings", JSON.stringify(bookings));
+    loadBookings();
+}
+
+/* ===== ĐĂNG XUẤT ===== */
+function logout(){
+    localStorage.removeItem("currentUser");
+    localStorage.removeItem("role");
+    window.location.href = "index.html";
+}
+
+loadBookings();
+
+</script>
+
+</body>
+</html>

@@ -1139,7 +1139,7 @@ function confirmBooking(){
 
     let paymentMethod = document.getElementById("paymentMethod").value;
 
-    // Kiểm tra thanh toán
+    // ===== KIỂM TRA THANH TOÁN =====
     if(paymentMethod === "card"){
         let name = document.getElementById("cardName").value.trim();
         let number = document.getElementById("cardNumber").value.trim();
@@ -1154,15 +1154,37 @@ function confirmBooking(){
 
     if(paymentMethod === "momo"){
         let phone = document.getElementById("momoPhone").value.trim();
-
         if(!phone){
             alert("Vui lòng nhập số điện thoại MoMo!");
             return;
         }
     }
 
-    let total = selectedSeats.length * ticketPrice;
+    // ===== SAU KHI MỌI THỨ HỢP LỆ MỚI LƯU =====
+    let currentUser = localStorage.getItem("currentUser");
 
+    if(!currentUser){
+        alert("Bạn chưa đăng nhập!");
+        return;
+    }
+
+    let booking = {
+        user: currentUser,
+        movie: selectedMovie,
+        cinema: cinema,
+        date: selectedDate,
+        time: selectedTime,
+        seats: selectedSeats,
+        total: selectedSeats.length * ticketPrice,
+        payment: paymentMethod,
+        createdAt: new Date().toLocaleString()
+    };
+
+    let bookings = JSON.parse(localStorage.getItem("bookings")) || [];
+    bookings.push(booking);
+    localStorage.setItem("bookings", JSON.stringify(bookings));
+
+    // ===== HIỂN THỊ THÀNH CÔNG =====
     document.getElementById("successInfo").innerHTML =
         "<b>🎬 Phim:</b> " + selectedMovie + "<br>" +
         "<b>🎯 Cụm rạp:</b> " + cinema + "<br>" +
@@ -1170,7 +1192,7 @@ function confirmBooking(){
         "<b>⏰ Giờ chiếu:</b> " + selectedTime + "<br>" +
         "<b>💺 Ghế:</b> " + selectedSeats.join(", ") + "<br>" +
         "<b>💳 Thanh toán:</b> " + paymentMethod.toUpperCase() + "<br>" +
-        "<b>💰 Tổng tiền:</b> " + total.toLocaleString("vi-VN") + " VNĐ";
+        "<b>💰 Tổng tiền:</b> " + (selectedSeats.length * ticketPrice).toLocaleString("vi-VN") + " VNĐ";
 
     closeBooking();
     document.getElementById("successModal").style.display = "flex";
@@ -1618,6 +1640,7 @@ animate();
 </div>
 </body>
 </html>
+
 
 
 
